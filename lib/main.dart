@@ -1,5 +1,5 @@
 // ignore_for_file: prefer__ructors, prefer_const_constructors
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,16 +30,16 @@ class Task563WetterApp extends StatefulWidget {
   @override
   State<Task563WetterApp> createState() => _Task563WetterAppState();
 }
+//FIXME - folg. Widgets auslagern
 
 class _Task563WetterAppState extends State<Task563WetterApp> {
   /* ------------------------------------------ Aufgabe 2 (Verwendung von JSON) */
-  /* -------------------------- Schreibe eine Methode des StatefulWidget-State, */
+  /* -----------------------5.  Schreibe eine Methode des StatefulWidget-State, */
   /* ----------------------------------- die die Werte aus dem JSON-String holt */
   /* ------------------------------- und in die entsprechenden Variablen setzt. */
 
-  static const String jsonString = """
+  static const String jsonStringDummy = """
  {
-     "latitude": 48.78,
      "longitude": 9.18,
      "current": {
          "time": "2024-01-12T11:45",
@@ -50,10 +50,15 @@ class _Task563WetterAppState extends State<Task563WetterApp> {
      }
  }
  """;
+/* ---------------------------------------------------------------------- E */
 
+  /* -------------------------------------------------------------- json.decode */
+  //INF - holt die Werte aus dem JSON-String und schreibt sie in eine Map
+  Map<String, dynamic> weatherData = json.decode(jsonStringDummy);
+  /* ----------------------------------------------------------------------- .E */
 
-//INF - die Daten aus dem JSON-String in die Variablen schreiben
-  String? city;
+  //INF - die Variablen, die die Werte aus dem JSON-String bekommen sollen
+  String? city = 'Stuttgart';
   double? temp;
   double? perceivedTemp;
   double? rain;
@@ -62,7 +67,7 @@ class _Task563WetterAppState extends State<Task563WetterApp> {
   late String daytimeString = daytime == 1 ? 'Tag' : 'Nacht';
   double? longitude;
   double? latitude;
-
+  /* ---------------------------------------------------------------------- E */
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +104,7 @@ class _Task563WetterAppState extends State<Task563WetterApp> {
                 'Stadt: $city',
                 style: TextStyle(
                   fontSize: 18,
-                  height: 2,
+                  height: 2.0,
                   color: Colors.blueGrey,
                 ),
               ),
@@ -107,26 +112,26 @@ class _Task563WetterAppState extends State<Task563WetterApp> {
                 'gefühlte Temp.: $perceivedTemp ',
                 style: TextStyle(
                   fontSize: 14,
-                  height: 2,
+                  height: 2.0,
                 ),
               ),
               Text(
                 'Temperatur: $temp °C',
                 style: TextStyle(
                   fontSize: 14,
-                  height: 2,
+                  height: 2.0,
                 ),
               ),
               Text(
                 'Niederschlag: $rain mm',
                 style: TextStyle(
                   fontSize: 12,
-                  height: 2,
+                  height: 2.0,
                 ),
               ),
               Text(
                 'Tageszeit: $daytimeString',
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12, height: 2.0),
               ),
               Text(
                 'Standort: lat: $latitude, lon: $longitude',
@@ -134,7 +139,9 @@ class _Task563WetterAppState extends State<Task563WetterApp> {
               ),
               SizedBox(height: 22),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Code zum Aktualisieren der Wettervorhersage hinzufügen
+                },
                 child: Text('Vorhersage updaten'),
               ),
               SizedBox(height: 22),
