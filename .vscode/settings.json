@@ -1,3 +1,4 @@
 {
-    "github.copilot.chat.localeOverride": "de"
+    "github.copilot.chat.localeOverride": "de",
+    "commentTranslate.hover.enabled": true
 }
