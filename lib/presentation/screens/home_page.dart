@@ -3,7 +3,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wetter_app_asynchron/models/weather_service.dart';
+import 'package:wetter_app_asynchron/repositories/weather_repositories.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -15,7 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-///==> - Vom Doz zur Verfügung gestelte Dummy-Daten
+  final WeatherRepository weatherRepository = WeatherRepository();
+
+  ///==> - Vom Doz zur Verfügung gestelte Dummy-Daten
 /*    static const String jsonStringDummy = """
  {
      "latitude": 48.78,
@@ -29,41 +31,48 @@ class _HomePageState extends State<HomePage> {
      }
  }
  """;  */
-//
-  /* -------------------------------------------------------------- json.decode */
 
-//==> - Deklarierung der Variablen, die die Werte aus dem JSON-String bekommen sollen
+ //==> - Deklarierung der Variablen, die die Werte aus dem JSON-String bekommen sollen
+ //INF - ich habe die Deklarationen nullable gemacht, damit kein roter Alarmscreen kommt,
+ // der sagt, das die Variablen nicht initialisiert seien
   String city = 'Stuttgart';
-  late double temp;
-  late double perceivedTemp;
-  late double rain;
-  late int daytime;
-//==> - folg. daytimeString ist eine if-Bed. => 1 = Tag, 0 = Nacht
+  double? temp;
+  double? perceivedTemp;
+  double? rain;
+  int? daytime;
+ //==> - folg. daytimeString ist eine if-Bed. => 1 = Tag, 0 = Nacht
   String get daytimeString => daytime == 1 ? 'Tag' : 'Nacht';
-  late double longitude;
-  late double latitude;
-  bool isLoading = true;
-  /* ---------------------------------------------------------------------- E */
+  double? longitude;
+  double? latitude;
+  bool isLoading = false;
+  /* ---------------------------------------------------------------- declare E*/
 
   @override
   void initState() {
     super.initState();
-  //==> - eine initState-Methode kann keine async-Methode sein,
+    //==> - eine initState-Methode kann keine async-Methode sein,
     //aber man kann in der initState eine async Methode, hier die initData()
     // die Verzögerung hat den Sinn dafür zu sorgen, dass auch variablen erst zugegriffen wird,
     // wenn Sie initialisiert worden sind
-    initData();
+    
+    // initData();
+    //==> - soll die Daten nichtgleich beim Start laden, 
+    // sondern erst wenn der Button gedrückt wird
   }
 
   void initData() async {
     await Future.delayed(
       Duration(seconds: 1),
     );
+    updateWeatherData();
+  }
 
 //==> Zugriff auf Eigenschaften der ursprünglichen Map weatherDataMap
 //==> ändern in Zugriff auf Eigenschaften des WeatherData-Objekt
 // BEispiel: weatherData['temp'] ==> weatherData.temp
-    fetchWeatherData().then(
+//INF -
+  void updateWeatherData() {
+    weatherRepository.fetchWeatherData().then(
       (weatherDataMap) {
         setState(
           () {
@@ -83,34 +92,11 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-//FIXME - auslagern in ein model
-/* alter Aufruf von fetchWeatherData()
-    fetchWeatherData().then(
-      (weatherDataMap) {
-        setState(
-          () {
-            city = weatherDataMap['city'];
-            temp = weatherDataMap['temp'];
-            perceivedTemp = weatherDataMap['perceivedTemp'];
-
-            if (kDebugMode) {
-              print('perceivedTemp wurde initialisiert: $perceivedTemp');
-            }
-            rain = weatherDataMap['rain'];
-            daytime = weatherDataMap['daytime'];
-            longitude = weatherDataMap['longitude'];
-            latitude = weatherDataMap['latitude'];
-            isLoading = false;
-          },
-        );
-      },
-    );
-   */  
   }
 
   @override
   Widget build(BuildContext context) {
-  //==> so lange die Daten geladen werden, wird der ProgressIndicator angezeigt
+    //==> so lange die Daten geladen werden, wird der ProgressIndicator angezeigt
     // und so lange wartet auch die App auf die Daten.
     // Wenn keine Daten geladen werden, dann wird es Loading fortgesetzt,
     // und dann die Seite neu aufgerufen, dies neu mit den richtigen Scaffold
@@ -200,10 +186,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 22),
                 ElevatedButton(
-                  onPressed: () {
-                    fetchWeatherData();
-                    setState(() {});
-                  },
+                  /*==> - Callback:
+                   In Dart und vielen anderen Programmiersprachen ist es üblich, eine Funktion oder Methode als Argument an eine andere Funktion oder Methode zu übergeben. In diesem Fall übergeben Sie die Methode selbst, nicht das Ergebnis ihrer Ausführung.
+                  
+                  Wenn Sie Klammern hinter den Methodennamen setzen, wie updateWeatherData(), rufen Sie die Methode sofort auf und das Ergebnis dieser Ausführung wird an onPressed übergeben. In diesem Fall erwartet onPressed eine Funktion, die aufgerufen wird, wenn der Button gedrückt wird, nicht das Ergebnis der Funktion.
+                  
+                  Indem Sie updateWeatherData ohne Klammern übergeben, stellen Sie sicher, dass die Methode erst aufgerufen wird, wenn der Button tatsächlich gedrückt wird. Dieses Konzept wird oft als "Callback-Funktion" oder "Handler-Funktion" bezeichnet.
+                  */
+                  onPressed: updateWeatherData,
                   child: Text('Vorhersage updaten'),
                 ),
                 SizedBox(height: 22),

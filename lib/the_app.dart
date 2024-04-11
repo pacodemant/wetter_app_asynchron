@@ -13,7 +13,7 @@ class TheApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: true,
       ),
-      home: const HomePage(title: '(Task 5.6.3)'),
+      home:  HomePage(title: '(Task 5.6.3)'),
     );
   }
 }
