@@ -48,6 +48,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    //INF - eine initState-Methode kann keine async-Methode sein,
+    //aber man kann in der initState eine async Methode, hier die initData()
+    // die Verzögerung hat den Sinn dafür zu sorgen, dass auch variablen erst zugegriffen wird,
+    // wenn Sie initialisiert worden sind
+    initData();
+  }
+
+  void initData() async {
+    await Future.delayed(
+      Duration(seconds: 1),
+    );
+
+//FIXME - auslagern in ein model
     fetchWeatherData().then(
       (weatherDataMap) {
         setState(
@@ -72,8 +85,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //INF so lange die Daten geladen werden, wird der ProgressIndicator angezeigt
+    // und so lange wartet auch die App auf die Daten.
+    // Wenn keine Daten geladen werden, dann wird es Loading fortgesetzt,
+    // und dann die Seite neu aufgerufen, dies neu mit den richtigen Scaffold
     if (isLoading) {
-      return CircularProgressIndicator();
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -94,19 +115,22 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  decoration: BoxDecoration(),
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  child: Center(
-                    child: Text('ppppp-Äbb'),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/clouds_in_blue_sky.jpg'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Container(
                   width: double.infinity,
-                  color: Colors.amber,
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(3),
                   child: Center(
-                    child: Text('Wedda-Äbb'),
+                    child: Text(
+                      'Wedda-Äbb',
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
                   ),
                 ),
                 SizedBox(

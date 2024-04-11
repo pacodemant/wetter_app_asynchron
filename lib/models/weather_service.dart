@@ -10,9 +10,9 @@ Future<Map<String, dynamic>> fetchWeatherData() async {
   final responseAPI = await http.get(
     //INF - OBEN: API-Anfrage dauert, daher async&await
 
-/*INF Uri.parse()
-UNTEN: Die parse() Methode ist eine Funktion in Dart, die verwendet wird, um einen String in ein bestimmtes Format oder eine bestimmte Datenstruktur umzuwandeln. In diesem Fall wird Uri.parse() verwendet, um einen String in ein Uri-Objekt umzuwandeln. Hier: Uri.parse() wandelt die URL der Wetter-API, die als String vorliegt, in ein Uri-Objekt um und übergibt es an die  http.get()-Methode
-*/
+    /*INF Uri.parse()
+ UNTEN: Die parse() Methode ist eine Funktion in Dart, die verwendet wird, um einen String in ein bestimmtes Format  oder eine bestimmte Datenstruktur umzuwandeln. In diesem Fall wird Uri.parse() verwendet, um einen String in ein Uri-Objekt umzuwandeln. Hier: Uri.parse() wandelt die URL der Wetter-API, die als String vorliegt, in ein Uri-Objekt um und übergibt es an die  http.get()-Methode
+ */
 
     Uri.parse(
         'https://api.open-meteo.com/v1/forecast?latitude=48.783333&longitude=8.183333&current=temperature_2m,apparent_temperature,is_day,precipitation&timezone=Europe%2FBerlin&forecast_days=1'),
@@ -23,7 +23,7 @@ UNTEN: Die parse() Methode ist eine Funktion in Dart, die verwendet wird, um ein
 
   if (responseAPI.statusCode == 200) {
     // ignore: avoid_print
-    //print(response.body); //INF - Terminalausgabe: JSON-String 
+    //print(response.body); //INF - Terminalausgabe: JSON-String
     final weatherDataMap = jsonDecode(responseAPI.body);
     return {
       'city': 'Stuttgart',
