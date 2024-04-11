@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-//INF - Vom Doz zur Verfügung gestelte Dummy-Daten
+///==> - Vom Doz zur Verfügung gestelte Dummy-Daten
 /*    static const String jsonStringDummy = """
  {
      "latitude": 48.78,
@@ -32,13 +32,13 @@ class _HomePageState extends State<HomePage> {
 //
   /* -------------------------------------------------------------- json.decode */
 
-  //INF - Deklarierung der Variablen, die die Werte aus dem JSON-String bekommen sollen
+//==> - Deklarierung der Variablen, die die Werte aus dem JSON-String bekommen sollen
   String city = 'Stuttgart';
   late double temp;
   late double perceivedTemp;
   late double rain;
   late int daytime;
-  //INF - folg. daytimeString ist eine if-Bed. => 1 = Tag, 0 = Nacht
+//==> - folg. daytimeString ist eine if-Bed. => 1 = Tag, 0 = Nacht
   String get daytimeString => daytime == 1 ? 'Tag' : 'Nacht';
   late double longitude;
   late double latitude;
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //INF - eine initState-Methode kann keine async-Methode sein,
+  //==> - eine initState-Methode kann keine async-Methode sein,
     //aber man kann in der initState eine async Methode, hier die initData()
     // die Verzögerung hat den Sinn dafür zu sorgen, dass auch variablen erst zugegriffen wird,
     // wenn Sie initialisiert worden sind
@@ -60,7 +60,31 @@ class _HomePageState extends State<HomePage> {
       Duration(seconds: 1),
     );
 
+//==> Zugriff auf Eigenschaften der ursprünglichen Map weatherDataMap
+//==> ändern in Zugriff auf Eigenschaften des WeatherData-Objekt
+// BEispiel: weatherData['temp'] ==> weatherData.temp
+    fetchWeatherData().then(
+      (weatherDataMap) {
+        setState(
+          () {
+            city = weatherDataMap.city;
+            temp = weatherDataMap.temp;
+            perceivedTemp = weatherDataMap.perceivedTemp;
+
+            if (kDebugMode) {
+              print('perceivedTemp wurde initialisiert: $perceivedTemp');
+            }
+            rain = weatherDataMap.rain;
+            daytime = weatherDataMap.daytime;
+            longitude = weatherDataMap.longitude;
+            latitude = weatherDataMap.latitude;
+            isLoading = false;
+          },
+        );
+      },
+    );
 //FIXME - auslagern in ein model
+/* alter Aufruf von fetchWeatherData()
     fetchWeatherData().then(
       (weatherDataMap) {
         setState(
@@ -81,11 +105,12 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+   */  
   }
 
   @override
   Widget build(BuildContext context) {
-    //INF so lange die Daten geladen werden, wird der ProgressIndicator angezeigt
+  //==> so lange die Daten geladen werden, wird der ProgressIndicator angezeigt
     // und so lange wartet auch die App auf die Daten.
     // Wenn keine Daten geladen werden, dann wird es Loading fortgesetzt,
     // und dann die Seite neu aufgerufen, dies neu mit den richtigen Scaffold
